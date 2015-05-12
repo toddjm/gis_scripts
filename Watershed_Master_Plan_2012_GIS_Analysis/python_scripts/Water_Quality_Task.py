@@ -6,8 +6,6 @@ import os
 def sq_ft_to_acres(x):
     return x / 43560.0
 
-
-
 # Specify directory paths to the project components.
 gdb_name = 'Watershed_GIS_Analysis.gdb'
 project_dir = 'Watershed_Master_Plan_GIS_Analysis'
@@ -46,7 +44,8 @@ for watershed in watershed_names:
     cursor.reset()
 
 # Writing tables.
-out_file = os.path.join(root_dir, project_dir, tables_dir, 'Water_Quality.csv')
+out_file = os.path.join(root_dir, project_dir, tables_dir,
+                        'Water_Quality_by_Watershed.csv')
 with open(out_file, 'wb') as f:
     writer = csv.writer(f)
     header = ['Watershed',

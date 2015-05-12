@@ -38,42 +38,16 @@ for watershed in watershed_names:
             watershed_area[watershed] = sq_ft_to_acres(row[1])
     cursor.reset()
 
-# Populate a dict for each watershed, keyed on watershed name
-# with acreage of tree canopy coverage as values.
-tree_canopy_coverage = {}
-field_names = ['Value', 'Count']
-for watershed in watershed_names:
-    raster_file_name = 'Tree_Canopy_' + watershed
-    if arcpy.ListRasters(raster_file_name):
-        cursor = arcpy.da.SearchCursor(in_table=raster_file_name,
-                                       field_names=field_names)
-        for row in cursor:
-            if row[0] == 0:
-                no_trees = row[1]
-            elif row[0] == 1:
-                trees = row[1]
-        total = trees + no_trees
-        ratio = trees / total
-        ws_area = watershed_area[watershed]
-        tree_canopy_coverage[watershed] = ws_area * ratio
-        cursor.reset()
-
 # Writing tables.
 out_file = os.path.join(root_dir, project_dir, tables_dir,
-                        'Tree_Canopy_Coverage_by_Watershed.csv')
+                        'Watershed_Area_by_Watershed.csv')
 with open(out_file, 'wb') as f:
     writer = csv.writer(f)
     header = ['Watershed',
-              'Total area (acres)',
-              'Tree canopy coverage (acres)',
-              'Tree canopy coverage (%)']
+              'Area (acres)']
     writer.writerow(header)
     for watershed in watershed_names:
         ws_full_name = watershed.replace("_", " ")
         ws_area = watershed_area[watershed]
-        tcc = tree_canopy_coverage[watershed]
-        pct = 100.0 * tcc / ws_area
         writer.writerow([ws_full_name,
-                         ws_area,
-                         tcc,
-                         pct])
+                         ws_area])

@@ -92,7 +92,7 @@ for watershed in watershed_names:
 
 # Writing tables.
 out_file = os.path.join(root_dir, project_dir, tables_dir,
-                        'Natural_Features.csv')
+                        'Natural_Features_by_Watershed.csv')
 with open(out_file, 'wb') as f:
     writer = csv.writer(f)
     header = ['Watershed',
