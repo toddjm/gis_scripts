@@ -62,29 +62,13 @@ out_file = os.path.join(root_dir, project_dir, tables_dir,
                         'CIP_Projects.csv')
 with open(out_file, 'wb') as f:
     writer = csv.writer(f)
-    header = ['Watershed',
-              '5-Year Funded (count)',
-              '5-Year Planned (count)',
-              'Completed (count)',
-              'Anticipated (count)',
-              'Cancelled (count)',
-              'Active (count)',
-              'Hold (count)']
+    header = ['Watershed']
+    stages_list = sorted(project_stages)
+    header_list = [i for i in stages_list if i is not None]
+    header += header_list
     writer.writerow(header)
     for watershed in watershed_names:
         ws_full_name = watershed.replace("_", " ")
-        p_0 = projects_by_ws[watershed]['5-YEAR FUNDED']
-        p_1 = projects_by_ws[watershed]['5-YEAR PLANNED']
-        p_2 = projects_by_ws[watershed]['COMPLETED']
-        p_3 = projects_by_ws[watershed]['ANTICIPATED']
-        p_4 = projects_by_ws[watershed]['CANCELLED']
-        p_5 = projects_by_ws[watershed]['ACTIVE']
-        p_6 = projects_by_ws[watershed]['HOLD']
-        writer.writerow([ws_full_name,
-                         p_0,
-                         p_1,
-                         p_2,
-                         p_3,
-                         p_4,
-                         p_5,
-                         p_6])
+        out_list = [projects_by_ws[watershed][i] for i in stages_list]
+        out_list = [ws_full_name] + out_list
+        writer.writerow(out_list)
