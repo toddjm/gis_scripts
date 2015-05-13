@@ -45,6 +45,7 @@ for watershed in watershed_names:
     pond_program_by_ws[watershed] = subtypes
 
 print pond_program_by_ws
+
 pond_type_by_ws = {}
 field_names = ['WATERSHED_FULL_NAME', 'IS_WQP', 'IS_DET']
 cursor = arcpy.da.SearchCursor(in_table=ponds_table,
@@ -54,18 +55,15 @@ for watershed in watershed_names:
     ws_full_name = watershed.replace("_", " ")
     subtypes = {}
     wq_cnt = 0
-    det_cnt = 0
     for row in cursor:
-        if row[0] == ws_full_name:
-            if row[1] == 1:
-                wq_cnt += 1
-            elif row[2] == 1:
-                det_cnt += 1
+        if row[0] == ws_full_name and row[1] == 1:
+            wq_cnt += 1
+        print wq_cnt
         subtypes['Water Quality'] = wq_cnt
-        subtypes['Detention'] = det_cnt
         cursor.reset()
     pond_type_by_ws[watershed] = subtypes
 
+print pond_type_by_ws
 # Writing tables.
 out_file = os.path.join(root_dir, project_dir, tables_dir,
                         'Number_of_Ponds_by_Watershed.csv')
@@ -73,18 +71,12 @@ with open(out_file, 'wb') as f:
     writer = csv.writer(f)
     header = ['Watershed',
               'Residential (count)',
-              'Commercial (count)',
-              'Water Quality (count)',
-              'Detention (count)']
+              'Commercial (count)']
     writer.writerow(header)
     for watershed in watershed_names:
         ws_full_name = watershed.replace("_", " ")
         res_cnt = pond_program_by_ws[watershed]['Residential']
         com_cnt = pond_program_by_ws[watershed]['Commercial']
-        wq_cnt = pond_type_by_ws[watershed]['Water Quality']
-        det_cnt = pond_type_by_ws[watershed]['Detention']
         writer.writerow([ws_full_name,
                          res_cnt,
-                         com_cnt,
-                         wq_cnt,
-                         det_cnt])
+                         com_cnt])
