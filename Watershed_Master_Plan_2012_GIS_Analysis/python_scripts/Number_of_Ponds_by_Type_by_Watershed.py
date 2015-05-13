@@ -21,7 +21,6 @@ ponds_table = os.path.join(task_dir, 'Stormwater_Control_Watersheds_Union')
 watershed_names = []
 watershed_names = arcpy.ListFeatureClasses(feature_dataset=
                                            'Watershed_Polygons')
-print watershed_names
 
 # Populate a dict keyed on watershed with value being another dict with keys
 # commercial, residential, water_quality, and detention and values being
@@ -44,8 +43,6 @@ for watershed in watershed_names:
         cursor.reset()
     pond_program_by_ws[watershed] = subtypes
 
-print pond_program_by_ws
-
 pond_type_by_ws = {}
 field_names = ['WATERSHED_FULL_NAME', 'IS_WQP', 'IS_DET']
 cursor = arcpy.da.SearchCursor(in_table=ponds_table,
@@ -58,12 +55,16 @@ for watershed in watershed_names:
     for row in cursor:
         if row[0] == ws_full_name and row[1] == 1:
             wq_cnt += 1
-        print wq_cnt
-        subtypes['Water Quality'] = wq_cnt
-        cursor.reset()
+    subtypes['Water Quality'] = wq_cnt
+    cursor.reset()
+    det_cnt = 0
+    for row in cursor:
+        if row[0] == ws_full_name and row[2] == 1:
+            det_cnt += 1
+    subtypes['Detention'] = det_cnt
     pond_type_by_ws[watershed] = subtypes
+    cursor.reset()
 
-print pond_type_by_ws
 # Writing tables.
 out_file = os.path.join(root_dir, project_dir, tables_dir,
                         'Number_of_Ponds_by_Watershed.csv')
@@ -71,12 +72,18 @@ with open(out_file, 'wb') as f:
     writer = csv.writer(f)
     header = ['Watershed',
               'Residential (count)',
-              'Commercial (count)']
+              'Commercial (count)',
+              'Water Quality (count)',
+              'Detention (count)']
     writer.writerow(header)
     for watershed in watershed_names:
         ws_full_name = watershed.replace("_", " ")
         res_cnt = pond_program_by_ws[watershed]['Residential']
         com_cnt = pond_program_by_ws[watershed]['Commercial']
+        wq_cnt = pond_type_by_ws[watershed]['Water Quality']
+        det_cnt = pond_type_by_ws[watershed]['Detention']
         writer.writerow([ws_full_name,
                          res_cnt,
-                         com_cnt])
+                         com_cnt,
+                         wq_cnt,
+                         det_cnt])
