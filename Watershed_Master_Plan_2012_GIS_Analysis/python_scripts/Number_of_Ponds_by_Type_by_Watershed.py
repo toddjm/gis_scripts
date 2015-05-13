@@ -2,10 +2,6 @@ import arcpy
 import csv
 import os
 
-# Function to convert sq. ft. to acres.
-def sq_ft_to_acres(x):
-    return x / 43560.0
-
 # Specify directory paths to the project components.
 gdb_name = 'Watershed_GIS_Analysis.gdb'
 project_dir = 'Watershed_Master_Plan_GIS_Analysis'
@@ -26,6 +22,7 @@ watershed_names = []
 watershed_names = arcpy.ListFeatureClasses(feature_dataset=
                                            'Watershed_Polygons')
 print watershed_names
+
 # Populate a dict keyed on watershed with value being another dict with keys
 # commercial, residential, water_quality, and detention and values being
 # count of each per watershed.
@@ -49,8 +46,7 @@ for watershed in watershed_names:
 
 print pond_program_by_ws
 pond_type_by_ws = {}
-field_names = ['WATERSHED_FULL_NAME', 'WATER_QUALITY_CONTROL', 'FLOOD_CONTROL']
-types = ['T', 'F']
+field_names = ['WATERSHED_FULL_NAME', 'IS_WQP', 'IS_DET']
 cursor = arcpy.da.SearchCursor(in_table=ponds_table,
                                field_names=field_names)
 # Iterate over each watershed.
@@ -60,10 +56,11 @@ for watershed in watershed_names:
     wq_cnt = 0
     det_cnt = 0
     for row in cursor:
-        if row[0] == ws_full_name and row[1] == 'T':
-            wq_cnt += 1
-        elif row[0] == ws_full_name and row[2] == 'T':
-            det_cnt += 1
+        if row[0] == ws_full_name:
+            if row[1] == 1:
+                wq_cnt += 1
+            elif row[2] == 1:
+                det_cnt += 1
         subtypes['Water Quality'] = wq_cnt
         subtypes['Detention'] = det_cnt
         cursor.reset()
