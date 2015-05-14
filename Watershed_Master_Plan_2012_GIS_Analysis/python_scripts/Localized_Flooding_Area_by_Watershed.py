@@ -1,6 +1,7 @@
 import arcpy
 import csv
 import os
+import collections
 
 # Convert sq. ft. to acres.
 def sq_ft_to_acres(x):
