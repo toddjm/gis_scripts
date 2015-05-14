@@ -24,6 +24,7 @@ arcpy.env.workspace = working_dir
 
 # Tables to be read in for this script.
 geo_table = os.path.join(task_dir, 'Geomorphic_Reaches_Watersheds_Intersect')
+sites_table = os.path.join(task_dir, 'Erosion_Sites_Watersheds_Intersect')
 
 # Watershed names are those matching feature classes in the
 # Watershed_Polygons feature dataset.
@@ -31,7 +32,7 @@ watershed_names = []
 watershed_names = arcpy.ListFeatureClasses(feature_dataset=
                                            'Watershed_Polygons')
 
-# Populate a list from DESCRIPTIV.
+# Populate a list from DESCRIPTIV for geomorphic reaches table.
 field_names = ['DESCRIPTIV']
 score_names = []
 # Set the cursor to search the feature class.
@@ -41,6 +42,17 @@ for row in cursor:
     score_names.append(row[0])
 # Collapse list to contain unique values.
 score_names = collections.OrderedDict.fromkeys(score_names).keys()
+
+# Populate a list from SITE_TYPE from erosion sites table.
+field_names = ['SITE_TYPE']
+site_type_names = []
+# Set the cursor to search the feature class.
+cursor = arcpy.da.SearchCursor(in_table=sites_table,
+                               field_names=field_names)
+for row in cursor:
+    site_type_names.append(row[0])
+# Collapse list to contain unique values.
+site_type_names = collections.OrderedDict.fromkeys(site_type_names).keys()
 
 # Create dict to be keyed on watershed name, values containing another dict
 # keyed by score with values miles of reach per score.
@@ -62,6 +74,10 @@ for watershed in watershed_names:
             geo_length[name] = ft_to_miles(length)
         cursor.reset()
     miles_by_score_by_ws[watershed] = geo_length
+
+# Compute number of erosion sites by type per watershed.
+
+
 
 # Writing tables.
 out_file = os.path.join(root_dir, project_dir, tables_dir,
