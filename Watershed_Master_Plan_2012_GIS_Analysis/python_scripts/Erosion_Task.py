@@ -1,5 +1,6 @@
 import arcpy
 import collections
+import csv
 
 # Specify directories.
 root_dir = 'G:\WPDR_Common\Planning\Minehardt\Projects'
