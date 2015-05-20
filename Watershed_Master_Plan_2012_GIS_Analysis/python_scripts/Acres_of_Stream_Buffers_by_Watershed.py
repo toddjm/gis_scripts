@@ -31,12 +31,12 @@ watershed_names = arcpy.ListFeatureClasses(feature_dataset=
 # DA (in miles). For CWQZ only.
 buffer_area_by_DA_CWQZ = {}
 drainage_thresholds = [64, 320, 640]
-# Search fields containing watershed name, drainage_threshold, and Shape_Length.
-field_names = ['WATERSHED_FULL_NAME', 'DRAINAGE_AREA_ORDINANCE', 'Shape_Area',
+field_names = ['WATERSHED_FULL_NAME',
+               'DRAINAGE_AREA_ORDINANCE',
+               'Shape_Area',
                'CRITICAL_WATER_QUALITY_ZONE']
 cursor = arcpy.da.SearchCursor(in_table=buffer_table,
                                field_names=field_names)
-# Iterate over each watershed.
 for watershed in watershed_names:
     ws_full_name = watershed.replace("_", " ")
     area_sum = {}
@@ -45,9 +45,9 @@ for watershed in watershed_names:
         for row in cursor:
             # Only sum the areas for a given watershed and DA.
             if (row[0] == ws_full_name and
-                row[1] == drainage_area and row[3] == 'CWQZ'):
+                row[1] == drainage_area and
+                row[3] == 'CWQZ'):
                 area += row[2]
-            # Insert key,value pair with area in acres.
             area_sum[drainage_area] = sq_ft_to_acres(area)
         cursor.reset()
     buffer_area_by_DA_CWQZ[watershed] = area_sum
@@ -57,9 +57,6 @@ for watershed in watershed_names:
 # DA (in miles). For WQTZ only.
 buffer_area_by_DA_WQTZ = {}
 drainage_thresholds = [64, 320, 640]
-# Search fields containing watershed name, drainage_threshold, and Shape_Length.
-field_names = ['WATERSHED_FULL_NAME', 'DRAINAGE_AREA_ORDINANCE', 'Shape_Area',
-               'CRITICAL_WATER_QUALITY_ZONE']
 cursor = arcpy.da.SearchCursor(in_table=buffer_table,
                                field_names=field_names)
 # Iterate over each watershed.
@@ -71,9 +68,9 @@ for watershed in watershed_names:
         for row in cursor:
             # Only sum the areas for a given watershed and DA.
             if (row[0] == ws_full_name and
-                row[1] == drainage_area and row[3] == 'WQTZ'):
+                row[1] == drainage_area and
+                row[3] == 'WQTZ'):
                 area += row[2]
-            # Insert key,value pair with area in acres.
             area_sum[drainage_area] = sq_ft_to_acres(area)
         cursor.reset()
     buffer_area_by_DA_WQTZ[watershed] = area_sum

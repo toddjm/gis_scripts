@@ -12,8 +12,6 @@ arcpy.env.workspace = working_dir
 arcpy.env.overwriteOutput = True
 arcpy.CheckOutExtension("Spatial")
 
-# Comment line.
-
 # Get raster names.
 slope_raster_names = arcpy.ListRasters(wild_card='Slope_*_Reclass')
 

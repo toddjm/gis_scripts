@@ -23,18 +23,16 @@ ponds_table = os.path.join(task_dir, 'Stormwater_Control_Watersheds_Union')
 # Watershed names are those matching feature classes in the
 # Watershed_Polygons feature dataset.
 watershed_names = []
-watershed_names = arcpy.ListFeatureClasses(feature_dataset=
-                                           'Watershed_Polygons')
+watershed_names = arcpy.ListFeatureClasses(feature_dataset='Watershed_Polygons')
 
 # Populate a dict keyed on watershed with value being another dict with keys
 # commercial, residential, water_quality, and detention and values being
-# count of each per watershed.
+# area of each per watershed.
 pond_program_by_ws = {}
 field_names = ['WATERSHED_FULL_NAME', 'PROGRAM_NAME', 'Shape_Area']
 programs = ['Residential', 'Commercial']
 cursor = arcpy.da.SearchCursor(in_table=ponds_table,
                                field_names=field_names)
-# Iterate over each watershed.
 for watershed in watershed_names:
     ws_full_name = watershed.replace("_", " ")
     subtypes = {}
@@ -47,6 +45,8 @@ for watershed in watershed_names:
         cursor.reset()
     pond_program_by_ws[watershed] = subtypes
 
+# Populate a dict keyed on watershed, values another dict with keys for either
+# water quality or detention pond and values area of each.
 pond_type_by_ws = {}
 field_names = ['WATERSHED_FULL_NAME', 'IS_WQP', 'IS_DET', 'Shape_Area']
 cursor = arcpy.da.SearchCursor(in_table=ponds_table,
