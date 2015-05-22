@@ -45,10 +45,6 @@ for watershed in watershed_names:
                                            floodplain_layer,
                                            selection_type='subset_selection')
     cnt = int(arcpy.GetCount_management('building_layer').getOutput(0))
-    #if cnt != 0:
-    #    out_name = watershed + '_Planimetrics'
-    #    out_file = os.path.join(task_dir, out_name)
-    #    arcpy.CopyFeatures_management(plan_layer, out_file)
     building_cnt_by_ws[watershed] = cnt
 
 # Writing tables.
