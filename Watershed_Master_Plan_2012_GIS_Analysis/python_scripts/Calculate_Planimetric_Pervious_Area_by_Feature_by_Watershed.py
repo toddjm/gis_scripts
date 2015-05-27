@@ -17,7 +17,8 @@ task_dir = 'Planimetrics_Features_Union_Watersheds'
 working_dir = os.path.join(root_dir, project_dir, gdb_name)
 arcpy.env.workspace = working_dir
 
-# List of pervious area features.
+# List of pervious area features. Omit Landfill, no landfill in any of the
+# watersheds.
 pc_features = ['Courtyard',
                'Edge_of_Trail',
                'Golf_Course',
