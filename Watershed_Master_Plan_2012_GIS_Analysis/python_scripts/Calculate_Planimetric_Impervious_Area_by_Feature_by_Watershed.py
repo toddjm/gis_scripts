@@ -22,7 +22,7 @@ ic_features = ['Above_Ground',
                'Airport_Runway_Taxiway',
                'Bridge',
                'Compacted_Soil',
-               'Covered'
+               'Covered',
                'Dam',
                'Dock',
                'Edge_of_Paved_Alley',
@@ -53,7 +53,7 @@ watershed_names = arcpy.ListFeatureClasses(feature_dataset=
 
 # Sum area for each IC feature on a per-watershed basis.
 ic_area_by_ws = {}
-field_names = ['WATERSHED_FULL_NAME', 'Shape_Area']
+field_names = ['WATERSHED_FULL_NAME', 'SHAPE_Area']
 for watershed in watershed_names:
     ws_full_name = watershed.replace("_", " ")
     ic_area = {}
