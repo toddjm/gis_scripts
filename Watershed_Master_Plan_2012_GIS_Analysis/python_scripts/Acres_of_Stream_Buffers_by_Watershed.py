@@ -1,9 +1,17 @@
+"""
+Writes a csv file with total area of creek buffer for each
+64-, 320-, and 640-acre drainage area by each critical
+water quality zone (CWQZ, TWQZ) per watershed.
+
+"""
 import arcpy
 import csv
 import os
 
-# Function to convert sq. ft. to acres.
 def sq_ft_to_acres(x):
+    """
+    Return acres given square feet.
+    """
     return x / 43560.0
 
 # Specify directory paths to the project components.
@@ -17,11 +25,18 @@ task_dir = 'Regulations'
 working_dir = os.path.join(root_dir, project_dir, gdb_name)
 arcpy.env.workspace = working_dir
 
-# Tables to be read in for this script.
+# The creek buffer feature class is processed by the user with the
+# Make Feature Layer tool with the Use Ratio Policy set for the shape
+# length and shape area fields. The resulting layer is unioned with the
+# watersheds feature class. Finally, the output feature class is edited
+# and entries with FID identifiers that are non-positive (i.e. = -1) have
+# been removed.
 buffer_table = os.path.join(task_dir, 'Creek_Buffers_Watersheds_Union')
 
 # Watershed names are those matching feature classes in the
-# Watershed_Polygons feature dataset.
+# Watershed_Polygons feature dataset. Alternatively, specify
+# watershed names as a list (and not one derived from feature
+# class names in the Watershed_Polygons feature dataset.
 watershed_names = []
 watershed_names = arcpy.ListFeatureClasses(feature_dataset=
                                            'Watershed_Polygons')
@@ -59,7 +74,6 @@ buffer_area_by_DA_WQTZ = {}
 drainage_thresholds = [64, 320, 640]
 cursor = arcpy.da.SearchCursor(in_table=buffer_table,
                                field_names=field_names)
-# Iterate over each watershed.
 for watershed in watershed_names:
     ws_full_name = watershed.replace("_", " ")
     area_sum = {}
