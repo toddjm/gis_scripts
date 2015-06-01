@@ -1,9 +1,16 @@
+"""
+Writes a csv file with total area of ponds for residential,
+commercial, detention, and water quality types per watershed.
+
+"""
 import arcpy
 import csv
 import os
 
-# Convert sq. ft. to acres.
 def sq_ft_to_acres(x):
+    """
+    Return acres given square feet.
+    """
     return x / 43560.0
 
 # Specify directory paths to the project components.
@@ -17,7 +24,12 @@ task_dir = 'Infrastructure'
 working_dir = os.path.join(root_dir, project_dir, gdb_name)
 arcpy.env.workspace = working_dir
 
-# Tables to be read in for this script.
+# The stormwater control feature class is processed by the user with the
+# Make Feature Layer tool with the Use Ratio Policy set for the shape
+# length and shape area fields. The resulting layer is unioned with the
+# watersheds feature class. Finally, the output feature class is edited
+# and entries with FID identifiers that are non-positive (i.e. = -1) have
+# been removed.
 ponds_table = os.path.join(task_dir, 'Stormwater_Control_Watersheds_Union')
 
 # Watershed names are those matching feature classes in the
@@ -46,7 +58,8 @@ for watershed in watershed_names:
     pond_program_by_ws[watershed] = subtypes
 
 # Populate a dict keyed on watershed, values another dict with keys for either
-# water quality or detention pond and values area of each.
+# water quality or detention pond and values area of each. The fields 'IS_WQP'
+# and 'IS_DET' are 1 (true) or 0 (false).
 pond_type_by_ws = {}
 field_names = ['WATERSHED_FULL_NAME', 'IS_WQP', 'IS_DET', 'Shape_Area']
 cursor = arcpy.da.SearchCursor(in_table=ponds_table,
@@ -71,7 +84,7 @@ for watershed in watershed_names:
 
 # Writing tables.
 out_file = os.path.join(root_dir, project_dir, tables_dir,
-                        'Area_of_Ponds_by_Watershed.csv')
+                        'Area_of_Ponds_by_Type_by_Watershed.csv')
 with open(out_file, 'wb') as f:
     writer = csv.writer(f)
     header = ['Watershed',
