@@ -1,3 +1,6 @@
+"""
+Read raster data and reclassify values.
+"""
 import arcpy
 import os
 
@@ -12,7 +15,7 @@ arcpy.env.workspace = working_dir
 arcpy.env.overwriteOutput = True
 arcpy.CheckOutExtension("Spatial")
 
-# Get raster names.
+# Get raster names (note wildcard).
 slope_raster_names = arcpy.ListRasters(wild_card='Slope_*')
 # Set remap ranges here: 0-15% -> 0, 15-25% -> 1, 25-35% ->2, and
 # 35-100 -> 3.
@@ -29,6 +32,3 @@ for raster in slope_raster_names:
                                          'NODATA')
     out_file = raster + '_Reclass'
     out_reclassify.save(out_file)
-
-
-

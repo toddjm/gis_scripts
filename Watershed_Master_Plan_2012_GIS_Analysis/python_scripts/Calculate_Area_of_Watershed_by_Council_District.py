@@ -18,7 +18,12 @@ task_dir = 'Map_of_Watersheds'
 working_dir = os.path.join(root_dir, project_dir, gdb_name)
 arcpy.env.workspace = working_dir
 
-# Tables to be read in for this script.
+# The districts feature class is processed by the user with the
+# Make Feature Layer tool with the Use Ratio Policy set for the shape
+# length and shape area fields. The resulting layer is unioned with the
+# watersheds feature class. Finally, the output feature class is edited
+# and entries with FID identifiers that are non-positive (i.e. = -1) have
+# been removed.
 district_table = os.path.join(task_dir, 'Districts_Watersheds_Union')
 
 # Watershed names are those matching feature classes in the
@@ -68,7 +73,8 @@ with open(out_file, 'wb') as f:
     writer = csv.writer(f)
     header = ['Watershed']
     district_name_list = sorted(district_names)
-    header_list = ["District " + str(i) + " (acres)" for i in district_name_list if i is not None]
+    header_list = ["District " + str(i) +
+                   " (acres)" for i in district_name_list if i is not None]
     header += header_list
     writer.writerow(header)
     for watershed in watershed_names:
