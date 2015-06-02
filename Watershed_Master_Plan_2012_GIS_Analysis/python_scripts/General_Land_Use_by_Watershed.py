@@ -1,10 +1,16 @@
+"""
+Writes a csv file with total area by land use per watershed.
+
+"""
 import arcpy
 import collections
 import csv
 import os
 
-# Function to convert sq. ft. to acres.
 def sq_ft_to_acres(x):
+    """
+    Return acres given square feet.
+    """
     return x / 43560.00
 
 # Specify directory paths to the project components.
@@ -18,7 +24,12 @@ task_dir = 'Development_Patterns'
 working_dir = os.path.join(root_dir, project_dir, gdb_name)
 arcpy.env.workspace = working_dir
 
-# Tables to be read in for this script.
+# The land use feature class is processed by the user with the
+# Make Feature Layer tool with the Use Ratio Policy set for the shape
+# length and shape area fields. The resulting layer is unioned with the
+# watersheds feature class. Finally, the output feature class is edited
+# and entries with FID identifiers that are non-positive (i.e. = -1) have
+# been removed.
 land_use_table = os.path.join(task_dir, 'Land_Use_2012_Watersheds_Union_Join')
 
 # Watershed names are those matching feature classes in the
@@ -39,11 +50,10 @@ for row in cursor:
 # Collapse list to contain unique values.
 land_use = collections.OrderedDict.fromkeys(land_use).keys()
 
-#print land_use
 # Create dict to be keyed on watershed name, values containing another dict
-# keyed by project stages with values equal to the count for each watershed.
+# keyed by land use with values equal to area use.
 land_use_by_ws = {}
-# Search fields containing watershed name, cu, and Shape_Area.
+# Search fields containing watershed name, land use, and Shape_Area.
 field_names = ['WATERSHED_FULL_NAME', 'LU_Name', 'Shape_Area']
 cursor = arcpy.da.SearchCursor(in_table=land_use_table,
                                field_names=field_names)

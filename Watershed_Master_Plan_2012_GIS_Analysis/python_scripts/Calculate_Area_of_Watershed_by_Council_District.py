@@ -1,10 +1,16 @@
+"""
+Write a csv file containing area of each watershed in each
+council district.
+"""
 import arcpy
 import collections
 import csv
 import os
 
-# Function to convert sq. ft. to acres.
 def sq_ft_to_acres(x):
+    """
+    Return acres given square feet.
+    """
     return x / 43560.00
 
 # Specify directory paths to the project components.
@@ -59,7 +65,7 @@ for watershed in watershed_names:
     for district in district_names:
         area = 0.0
         for row in cursor:
-            # Only sum the areas for a given watershed and LU.
+            # Only sum the areas for a given watershed and district.
             if row[0] == ws_full_name and row[1] == district:
                 area += row[2]
             ws_area[district] = sq_ft_to_acres(area)
@@ -72,13 +78,13 @@ out_file = os.path.join(root_dir, project_dir, tables_dir,
 with open(out_file, 'wb') as f:
     writer = csv.writer(f)
     header = ['Watershed']
-    district_name_list = sorted(district_names)
+    dn_list = sorted(district_names)
     header_list = ["District " + str(i) +
-                   " (acres)" for i in district_name_list if i is not None]
+                   " (acres)" for i in dn_list if i is not None]
     header += header_list
     writer.writerow(header)
     for watershed in watershed_names:
         ws_full_name = watershed.replace("_", " ")
-        out_list = [ws_area_by_district[watershed][i] for i in district_name_list]
+        out_list = [ws_area_by_district[watershed][i] for i in dn_list]
         out_list = [ws_full_name] + out_list
         writer.writerow(out_list)

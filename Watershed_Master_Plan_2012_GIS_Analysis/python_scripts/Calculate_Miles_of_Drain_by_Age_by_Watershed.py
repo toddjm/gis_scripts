@@ -1,14 +1,17 @@
+"""
+Write a csv file with miles of drainage pipe by age per
+watershed.
+
+"""
 import arcpy
 import collections
 import csv
 import os
 
-# Function to convert square feet to acres.
-def sq_ft_to_acres(x):
-    return x / 43560.0
-
-# Function to convert feet to miles.
 def ft_to_miles(x):
+    """
+    Return miles given feet.
+    """
     return x / 5280.0
 
 # Specify directory paths to the project components.
@@ -22,7 +25,12 @@ task_dir = 'Infrastructure'
 working_dir = os.path.join(root_dir, project_dir, gdb_name)
 arcpy.env.workspace = working_dir
 
-# Tables to be read in for this script.
+# The drainage pipe feature class is processed by the user with the
+# Make Feature Layer tool with the Use Ratio Policy set for the shape
+# length and shape area fields. The resulting layer is intersected with the
+# watersheds feature class. Finally, the output feature class is edited
+# and entries with FID identifiers that are non-positive (i.e. = -1) have
+# been removed.
 pipe_table = os.path.join(task_dir, 'Drainage_Pipe_Watersheds_Intersect')
 
 # Watershed names are those matching feature classes in the
