@@ -3,12 +3,10 @@ import collections
 import csv
 import os
 
-# Function to convert sq. ft. to acres.
-def sq_ft_to_acres(x):
-    return x / 43560.00
-
-# Function to convert feet to miles.
 def ft_to_miles(x):
+    """
+    Return miles given feet.
+    """
     return x / 5280.0
 
 # Specify directory paths to the project components.
@@ -75,22 +73,18 @@ for watershed in watershed_names:
         cursor.reset()
     miles_by_score_by_ws[watershed] = geo_length
 
-# Compute number of erosion sites by type per watershed.
-
-
-
 # Writing tables.
 out_file = os.path.join(root_dir, project_dir, tables_dir,
                         'Miles_of_Reaches_by_Watershed.csv')
 with open(out_file, 'wb') as f:
     writer = csv.writer(f)
     header = ['Watershed']
-    score_names_list = sorted(score_names)
-    header_list = [i + " (miles)" for i in score_names_list if i is not None]
+    sn_list = sorted(score_names)
+    header_list = [i + " (miles)" for i in sn_list if i is not None]
     header += header_list
     writer.writerow(header)
     for watershed in watershed_names:
         ws_full_name = watershed.replace("_", " ")
-        out_list = [miles_by_score_by_ws[watershed][i] for i in score_names_list]
+        out_list = [miles_by_score_by_ws[watershed][i] for i in sn_list]
         out_list = [ws_full_name] + out_list
         writer.writerow(out_list)
