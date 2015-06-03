@@ -1,3 +1,8 @@
+"""
+Write csv file with miles reaches by score for each
+watershed.
+
+"""
 import arcpy
 import collections
 import csv

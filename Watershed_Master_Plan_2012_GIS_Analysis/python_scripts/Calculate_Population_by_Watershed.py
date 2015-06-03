@@ -1,3 +1,8 @@
+"""
+Write a csv file with total population per
+watershed.
+
+"""
 import arcpy
 import csv
 import os

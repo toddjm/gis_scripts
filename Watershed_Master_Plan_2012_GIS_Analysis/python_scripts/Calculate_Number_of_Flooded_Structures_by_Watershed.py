@@ -1,9 +1,17 @@
+"""
+Write a csv file with a count of structures in the 100-year
+floodplain for each watershed.
+
+"""
+
 import arcpy
 import csv
 import os
 
-# Function to convert sq. ft. to acres.
 def sq_ft_to_acres(x):
+    """
+    Return acres given square feet.
+    """
     return x / 43560.0
 
 # Specify directory paths to the project components.
@@ -27,7 +35,8 @@ watershed_names = []
 watershed_names = arcpy.ListFeatureClasses(feature_dataset=
                                            'Watershed_Polygons')
 
-# Extract planimetrics per watershed.
+# Count structures with center in each watershed, take that group and select
+# which ones are in the 100-year floodplain.
 building_cnt_by_ws = {}
 building_layer = 'Building_Layer'
 floodplain_layer = 'Floodplain_Layer'

@@ -1,9 +1,16 @@
+"""
+Write a csv file with a count of roads in the 100-year
+floodplain for each watershed.
+
+"""
 import arcpy
 import csv
 import os
 
-# Function to convert sq. ft. to acres.
 def sq_ft_to_acres(x):
+    """
+    Return acres given square feet.
+    """
     return x / 43560.0
 
 # Specify directory paths to the project components.
@@ -27,7 +34,8 @@ watershed_names = []
 watershed_names = arcpy.ListFeatureClasses(feature_dataset=
                                            'Watershed_Polygons')
 
-# Extract planimetrics per watershed.
+# Count roads that intersect each watershed, take that group and select
+# which ones are in the 100-year floodplain.
 road_cnt_by_ws = {}
 road_layer = 'Road_Layer'
 floodplain_layer = 'Floodplain_Layer'
@@ -45,10 +53,6 @@ for watershed in watershed_names:
                                            floodplain_layer,
                                            selection_type='subset_selection')
     cnt = int(arcpy.GetCount_management('road_layer').getOutput(0))
-    #if cnt != 0:
-    #    out_name = watershed + '_Planimetrics'
-    #    out_file = os.path.join(task_dir, out_name)
-    #    arcpy.CopyFeatures_management(plan_layer, out_file)
     road_cnt_by_ws[watershed] = cnt
 
 # Writing tables.

@@ -1,3 +1,8 @@
+"""
+Write csv file with number of erosion sites by type
+per watershed.
+
+"""
 import arcpy
 import collections
 import csv

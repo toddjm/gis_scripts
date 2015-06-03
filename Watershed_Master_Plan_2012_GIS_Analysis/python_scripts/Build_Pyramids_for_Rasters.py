@@ -1,3 +1,8 @@
+"""
+Build pyramids for large set of rasters.
+
+"""
+
 import arcpy
 import os
 

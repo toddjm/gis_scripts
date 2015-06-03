@@ -1,15 +1,11 @@
+"""
+Write a csv file with a count of parcels by age
+for each watershed.
+
+"""
 import arcpy
-import collections
 import csv
 import os
-
-# Function to convert square feet to acres.
-def sq_ft_to_acres(x):
-    return x / 43560.0
-
-# Function to convert feet to miles.
-def ft_to_miles(x):
-    return x / 5280.0
 
 # Specify directory paths to the project components.
 gdb_name = 'Watershed_GIS_Analysis.gdb'

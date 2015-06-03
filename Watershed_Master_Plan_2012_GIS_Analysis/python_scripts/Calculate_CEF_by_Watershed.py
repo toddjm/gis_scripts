@@ -1,9 +1,15 @@
+"""
+Write a csv file with CEF information per watershed.
+
+"""
 import arcpy
 import csv
 import os
 
-# Function to convert sq. ft. to acres.
 def sq_ft_to_acres(x):
+    """
+    Return acres given square feet.
+    """
     return x / 43560.0
 
 # Specify directory paths to the project components.
@@ -29,7 +35,7 @@ watershed_names = arcpy.ListFeatureClasses(feature_dataset=
                                            'Watershed_Polygons')
 
 # Compute number of springs per watershed.
-# Make a layer for the springs.
+# Make a layer for the springs for select by location operation.
 springs_layer = 'Springs_Layer'
 arcpy.Delete_management(springs_layer)
 arcpy.MakeFeatureLayer_management(springs_table, springs_layer)
