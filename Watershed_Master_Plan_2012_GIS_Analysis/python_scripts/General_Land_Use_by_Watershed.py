@@ -24,10 +24,8 @@ task_dir = 'Development_Patterns'
 working_dir = os.path.join(root_dir, project_dir, gdb_name)
 arcpy.env.workspace = working_dir
 
-# The land use feature class is processed by the user with the
-# Make Feature Layer tool with the Use Ratio Policy set for the shape
-# length and shape area fields. The resulting layer is unioned with the
-# watersheds feature class. Finally, the output feature class is edited
+# The land use feature class is unioned with the
+# watersheds feature class. The output feature class is edited
 # and entries with FID identifiers that are non-positive (i.e. = -1) have
 # been removed.
 land_use_table = os.path.join(task_dir, 'Land_Use_2012_Watersheds_Union_Join')

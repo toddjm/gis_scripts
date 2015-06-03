@@ -59,7 +59,8 @@ with open(out_file, 'wb') as f:
     writer = csv.writer(f)
     header = ['Watershed']
     stn_list = sorted(site_type_names)
-    header_list = ["Type " + str(i) + " (count)" for i in stn_list if i is not None]
+    header_list = ["Type " + str(i) +
+                   " (count)" for i in stn_list if i is not None]
     header += header_list
     writer.writerow(header)
     for watershed in watershed_names:

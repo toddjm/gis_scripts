@@ -17,7 +17,7 @@ def sq_ft_to_acres(x):
 # Specify directory paths to the project components.
 gdb_name = 'Watershed_GIS_Analysis.gdb'
 project_dir = 'Watershed_Master_Plan_GIS_Analysis'
-root_dir = 'G:\WPDR_Common\Planning\Minehardt\Projects'
+root_dir = 'G:\WPDR_Common\Planning\Minehardt'
 tables_dir = 'Tables'
 task_dir = 'Regulations'
 
@@ -25,10 +25,8 @@ task_dir = 'Regulations'
 working_dir = os.path.join(root_dir, project_dir, gdb_name)
 arcpy.env.workspace = working_dir
 
-# The creek buffer feature class is processed by the user with the
-# Make Feature Layer tool with the Use Ratio Policy set for the shape
-# length and shape area fields. The resulting layer is unioned with the
-# watersheds feature class. Finally, the output feature class is edited
+# The creek buffer feature class is unioned with the
+# watersheds feature class. The output feature class is edited
 # and entries with FID identifiers that are non-positive (i.e. = -1) have
 # been removed.
 buffer_table = os.path.join(task_dir, 'Creek_Buffers_Watersheds_Union')

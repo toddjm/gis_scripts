@@ -24,10 +24,8 @@ task_dir = 'Infrastructure'
 working_dir = os.path.join(root_dir, project_dir, gdb_name)
 arcpy.env.workspace = working_dir
 
-# The stormwater control feature class is processed by the user with the
-# Make Feature Layer tool with the Use Ratio Policy set for the shape
-# length and shape area fields. The resulting layer is unioned with the
-# watersheds feature class. Finally, the output feature class is edited
+# The stormwater control feature class is unioned with the
+# watersheds feature class. The output feature class is edited
 # and entries with FID identifiers that are non-positive (i.e. = -1) have
 # been removed.
 ponds_table = os.path.join(task_dir, 'Stormwater_Control_Watersheds_Union')
@@ -35,7 +33,8 @@ ponds_table = os.path.join(task_dir, 'Stormwater_Control_Watersheds_Union')
 # Watershed names are those matching feature classes in the
 # Watershed_Polygons feature dataset.
 watershed_names = []
-watershed_names = arcpy.ListFeatureClasses(feature_dataset='Watershed_Polygons')
+watershed_names = arcpy.ListFeatureClasses(feature_dataset=
+                                           'Watershed_Polygons')
 
 # Populate a dict keyed on watershed with value being another dict with keys
 # commercial, residential, water_quality, and detention and values being

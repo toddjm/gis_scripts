@@ -1,9 +1,16 @@
+"""
+Write a csv file containing the area in acres of each
+watershed.
+
+"""
 import arcpy
 import csv
 import os
 
-# Function to convert sq. ft. to acres.
 def sq_ft_to_acres(x):
+    """
+    Return acres given square feet.
+    """
     return x / 43560.0
 
 # Specify directory paths to the project components.
